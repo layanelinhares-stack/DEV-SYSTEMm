@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEV SYSTEM | Estudos</title>
+
+<style>
+:root {
+  --fundo: #0d0916;
+  --painel: #191126;
+  --roxo: #8b45ed;
+  --texto: #f5edff;
+  --cinza: #b6a8c9;
+  --borda: #39264f;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: Arial, sans-serif;
+}
+button, input, textarea { font: inherit; }
+button {
+  background: var(--roxo);
+  color: white;
+  border: 0;
+  padding: 11px 15px;
+  border-radius: 9px;
+  cursor: pointer;
+  margin: 3px;
+}
+button:hover { background: #a66aff; }
+.layout { display: flex; min-height: 100vh; }
+aside {
+  width: 240px;
+  padding: 22px 15px;
+  background: #120d1e;
+  border-right: 1px solid var(--borda);
+}
+.logo { font-size: 23px; font-weight: bold; margin-bottom: 30px; }
+.logo span { color: #b88aff; }
+nav button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: var(--cinza);
+  margin: 5px 0;
+}
+nav button:hover { background: #30203f; color: white; }
+main { flex: 1; min-width: 0; padding: 28px; }
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+}
+h1 { font-size: 30px; }
+h2 { font-size: 21px; }
+p { color: var(--cinza); line-height: 1.6; }
+.pagina { display: none; }
+.pagina.ativa { display: block; }
+.hero {
+  background: linear-gradient(120deg,#372052,#191126);
+  border: 1px solid #51366d;
+  border-radius: 18px;
+  padding: 30px;
+  margin-bottom: 22px;
+}
+.hero h1 { font-size: 36px; }
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+  gap: 15px;
+  margin: 20px 0;
+}
+.card {
+  background: var(--painel);
+  border: 1px solid var(--borda);
+  border-radius: 14px;
+  padding: 20px;
+}
+.card h3 { margin-top: 0; }
+.numero { font-size: 30px; color: #c49aff; font-weight: bold; }
+.tag {
+  display: inline-block;
+  color: #d9c0ff;
+  background: #302040;
+  border-radius: 7px;
+  padding: 5px 9px;
+  font-size: 12px;
+}
+.editor {
+  width: 100%;
+  min-height: 260px;
+  background: #0a0710;
+  color: #d9c4ff;
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  padding: 15px;
+  font-family: Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.saida {
+  background: #08060d;
+  border: 1px solid var(--borda);
+  padding: 15px;
+  min-height: 55px;
+  border-radius: 8px;
+  color: #65edaa;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin-top: 10px;
+}
+.campo {
+  display: block;
+  width: 100%;
+  background: #100b19;
+  border: 1px solid var(--borda);
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+.opcao {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: #30203f;
+}
+.opcao.selecionada { outline: 2px solid #c49aff; }
+.feedback { font-weight: bold; margin: 15px 0; }
+.progresso {
+  height: 8px;
+  background: #342343;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 12px 0;
+}
+.progresso div {
+  height: 100%;
+  width: 0;
+  background: #ad72ff;
+}
+label { color: var(--cinza); }
+footer {
+  text-align: center;
+  color: #766483;
+  margin-top: 40px;
+  font-size: 12px;
+}
+body.claro {
+  --fundo: #f4effb;
+  --painel: #fff;
+  --texto: #261735;
+  --cinza: #71617f;
+  --borda: #dfd0ef;
+}
+body.claro aside { background: #eae0f6; }
+body.claro .hero { background: #e8d7fb; }
+body.claro .campo { background: white; color: #261735; }
+@media(max-width:700px) {
+  .layout { display: block; }
+  aside { width: 100%; }
+  nav { display: flex; overflow-x: auto; gap: 5px; }
+  nav button { min-width: max-content; width: auto; }
+  main { padding: 16px; }
+  .hero { padding: 20px; }
+  .hero h1 { font-size: 28px; }
+}
+</style>
+</head>
+
+<body>
+<div class="layout">
+
+<aside>
+  <div class="logo">⌘ DEV <span>SYSTEM</span></div>
+  <p>ESPAÇO DE ESTUDOS</p>
+  <nav>
+    <button onclick="abrir('inicio')">▦ Painel inicial</button>
+    <button onclick="abrir('trilhas')">◈ Trilhas de estudo</button>
+    <button onclick="abrir('editor')">⌘ Editor de código</button>
+    <button onclick="abrir('desafios')">⚡ Desafios</button>
+    <button onclick="abrir('anotacoes')">▤ Anotações</button>
+    <button onclick="abrir('progresso')">◷ Meu progresso</button>
+  </nav>
+  <hr style="border-color:#39264f;margin:20px 0">
+  <button onclick="trocarTema()">☼ Trocar tema</button>
+  <button onclick="ajuda()">? Ajuda</button>
+</aside>
+
+<main>
+<header>
+  <div>
+    <div class="tag">LEARN • BUILD • REPEAT</div>
+    <h2 id="tituloPagina">Painel inicial</h2>
+  </div>
+  <button onclick="abrir('editor')">＋ Programar</button>
+</header>
+
+<!-- PAINEL INICIAL -->
+<section id="inicio" class="pagina ativa">
+  <div class="hero">
+    <span class="tag">SEU FUTURO COMEÇA AQUI</span>
+    <h1>Olá, seja bem vindo ao DEV SYSTEM! 💜</h1>
+    <p>Aprenda programação, pratique seus códigos e construa projetos incríveis.</p>
+    <button onclick="abrir('trilhas')">Explorar trilhas →</button>
+    <button onclick="abrir('editor')">Abrir editor ⌘</button>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <p>Trilhas disponíveis</p>
+      <div class="numero">05</div>
+    </div>
+    <div class="card">
+      <p>Desafios corretos</p>
+      <div class="numero" id="totalDesafios">0</div>
+    </div>
+    <div class="card">
+      <p>Anotações salvas</p>
+      <div class="numero" id="totalNotas">0</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📚 Continue aprendendo</h2>
+    <p>Escolha uma matéria para começar.</p>
+    <button onclick="carregarAula('logica')">Lógica de programação</button>
+    <button onclick="carregarAula('html')">HTML e CSS</button>
+    <button onclick="carregarAula('javascript')">JavaScript</button>
+    <button onclick="carregarAula('python')">Python</button>
+    <button onclick="carregarAula('introdução ao JAVA')">Java</button>
+    <button onclick="carregarAula('TypeSript')">TypeSript</button>
+  </div>
+</section>
+
+<!-- TRILHAS -->
+<section id="trilhas" class="pagina">
+  <h1>Trilhas de estudo</h1>
+  <p>Aprenda passo a passo e pratique os conceitos.</p>
+  <div class="cards">
+    <div class="card">
+      <h3>🧠 Lógica de programação</h3>
+      <p>Variáveis, condições, laços e funções.</p>
+      <button onclick="carregarAula('logica')">Estudar</button>
+    </div>
+    <div class="card">
+      <h3>🌐 HTML e CSS</h3>
+      <p>Estruture e estilize sites.</p>
+      <button onclick="carregarAula('html')">Estudar</button>
+    </div>
+    <div class="card">
+      <h3>🟨 JavaScript</h3>
+      <p>Crie páginas interativas.</p>
+      <button onclick="carregarAula('javascript')">Estudar</button>
+    </div>
+    <div class="card">
+      <h3>🐍 Python</h3>
+      <p>Aprenda sintaxe, condições e funções.</p>
+      <button onclick="carregarAula('python')">Estudar</button>
+    </div>
+    <div class="card">
+      <h3>🗄️ Banco de dados</h3>
+      <p>Conheça tabelas e consultas SQL.</p>
+      <button onclick="carregarAula('sql')">Estudar</button>
+    </div>
+  </div>
+</section>
+
+<!-- EDITOR -->
+<section id="editor" class="pagina">
+  <h1>⌘ Laboratório de código</h1>
+  <p>Escreva JavaScript e clique em executar para ver o resultado.</p>
+  <div class="card">
+    <label for="codigo">main.js</label>
+    <textarea id="codigo" class="editor" spellcheck="false">const nome = "Dev";
+
+function saudacao(pessoa) {
+  return `Olá, ${pessoa}!`;
+}
+
+console.log(saudacao(nome));
+console.log("Bora aprender programação!");</textarea>
+    <br>
+    <button onclick="executarCodigo()">▶ Executar código</button>
+    <button onclick="copiarCodigo()">Copiar</button>
+    <button onclick="restaurarCodigo()">Restaurar</button>
+    <h3>Resultado:</h3>
+    <div id="saida" class="saida">A saída do código aparecerá aqui.</div>
+  </div>
+  <div class="card">
+    <h3>💡 Dica</h3>
+    <p>Experimente trocar o nome "Dev" pelo seu nome e executar novamente.</p>
+  </div>
+</section>
+
+<!-- DESAFIOS -->
+<section id="desafios" class="pagina">
+  <h1>⚡ Desafios</h1>
+  <p>Escolha uma alternativa e confira sua resposta.</p>
+  <div class="card">
+    <span class="tag" id="numeroPergunta">DESAFIO 1</span>
+    <h2 id="pergunta">O que é uma variável?</h2>
+    <div id="alternativas"></div>
+    <div id="feedback" class="feedback"></div>
+    <button id="conferir" onclick="conferirResposta()">Conferir resposta</button>
+    <button id="proximo" onclick="proximaPergunta()" disabled>Próximo →</button>
+  </div>
+</section>
+
+<!-- ANOTAÇÕES -->
+<section id="anotacoes" class="pagina">
+  <h1>📝 Minhas anotações</h1>
+  <p>Guarde tudo que você aprender.</p>
+  <div class="card">
+    <label for="nomeNota">Título</label>
+    <input id="nomeNota" class="campo" placeholder="Ex.: O que é uma função?">
+    <label for="textoNota">Conteúdo</label>
+    <textarea id="textoNota" class="campo" rows="5" placeholder="Escreva sua anotação..."></textarea>
+    <button onclick="salvarNota()">Salvar anotação</button>
+    <button onclick="limparCampos()">Limpar campos</button>
+  </div>
+  <h2>Minhas notas salvas</h2>
+  <div id="listaNotas" class="cards"></div>
+</section>
+
+<!-- PROGRESSO -->
+<section id="progresso" class="pagina">
+  <h1>◷ Meu progresso</h1>
+  <div class="card">
+    <h3>Meta diária de estudos</h3>
+    <label><input type="checkbox" class="tarefa" onchange="atualizarTarefas()"> Revisar um conceito</label><br><br>
+    <label><input type="checkbox" class="tarefa" onchange="atualizarTarefas()"> Escrever um código</label><br><br>
+    <label><input type="checkbox" class="tarefa" onchange="atualizarTarefas()"> Resolver um desafio</label><br><br>
+    <label><input type="checkbox" class="tarefa" onchange="atualizarTarefas()"> Fazer uma anotação</label>
+    <div class="progresso"><div id="barraProgresso"></div></div>
+    <p id="textoProgresso">0 de 4 tarefas concluídas.</p>
+  </div>
+  <div class="card">
+    <h3>Seu próximo passo</h3>
+    <p>Pratique um pouco todos os dias. Comece com lógica e depois avance para projetos.</p>
+    <button onclick="abrir('trilhas')">Continuar estudando →</button>
+  </div>
+</section>
+
+<footer>DEV SYSTEM © 2026 • APRENDA, PRATIQUE E EVOLUA 💜</footer>
+</main>
+</div>
+
+<script>
+// NAVEGAÇÃO
+function abrir(id) {
+  document.querySelectorAll(".pagina").forEach(p => {
+    p.classList.remove("ativa");
+  });
+  document.getElementById(id).classList.add("ativa");
+
+  const nomes = {
+    inicio:"Painel inicial",
+    trilhas:"Trilhas de estudo",
+    editor:"Laboratório de código",
+    desafios:"Desafios",
+    anotacoes:"Minhas anotações",
+    progresso:"Meu progresso"
+  };
+
+  document.getElementById("tituloPagina").textContent = nomes[id];
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+// TEMA
+function trocarTema() {
+  document.body.classList.toggle("claro");
+}
+
+// AJUDA
+function ajuda() {
+  alert(
+    "Bem-vinda à DEV SYSTEM! 💜\n\n" +
+    "1. Explore as trilhas.\n" +
+    "2. Pratique no editor JavaScript.\n" +
+    "3. Resolva os desafios.\n" +
+    "4. Salve suas anotações.\n" +
+    "5. Acompanhe seu progresso."
+  );
+}
+
+// AULAS
+const aulas = {
+  logica: {
+    titulo:"Lógica de programação",
+    codigo:'let idade = 16;\n\nif (idade >= 18) {\n  console.log("Maior de idade");\n} else {\n  console.log("Menor de idade");\n}'
+  },
+  html: {
+    titulo:"HTML e CSS",
+    codigo:'<h1>Meu primeiro site</h1>\n<p>Estou aprendendo programação!</p>\n<button>Clique aqui</button>'
+  },
+  javascript: {
+    titulo:"JavaScript",
+    codigo:'const nome = "Dev";\n\nfunction saudacao(pessoa) {\n  return `Olá, ${pessoa}!`;\n}\n\nconsole.log(saudacao(nome));'
+  },
+  python: {
+    titulo:"Python",
+    codigo:'nome = "Dev"\nprint(f"Olá, {nome}!")\n\nidade = 16\nif idade >= 18:\n    print("Maior de idade")\nelse:\n    print("Menor de idade")'
+  },
+  sql: {
+    titulo:"Banco de dados SQL",
+    codigo:'SELECT nome, idade\nFROM estudantes\nWHERE idade >= 15;'
+  }
+};
+
+function carregarAula(tipo) {
+  const aula = aulas[tipo];
+  document.getElementById("codigo").value = aula.codigo;
+  document.getElementById("saida").textContent =
+    "Aula carregada: " + aula.titulo +
+    "\nLeia o exemplo e pratique!";
+  abrir("editor");
+}
+
+// EDITOR DE JAVASCRIPT
+const codigoInicial = document.getElementById("codigo").value;
+
+function executarCodigo() {
+  const codigo = document.getElementById("codigo").value;
+  const saida = document.getElementById("saida");
+  let mensagens = [];
+
+  const consoleFalso = {
+    log: (...valores) => mensagens.push(
+      valores.map(v => String(v)).join(" ")
+    ),
+    error: (...valores) => mensagens.push(
+      "Erro: " + valores.join(" ")
+    )
+  };
+
+  try {
+    const executar = new Function("console", codigo);
+    executar(consoleFalso);
+    saida.style.color = "#65edaa";
+    saida.textContent = mensagens.length
+      ? mensagens.join("\n")
+      : "Código executado sem mensagens.";
+  } catch (erro) {
+    saida.style.color = "#ff8198";
+    saida.textContent = "Erro no código: " + erro.message;
+  }
+}
+
+async function copiarCodigo() {
+  const campo = document.getElementById("codigo");
+  try {
+    await navigator.clipboard.writeText(campo.value);
+    alert("Código copiado!");
+  } catch (erro) {
+    campo.select();
+    document.execCommand("copy");
+    alert("Código copiado!");
+  }
+}
+
+function restaurarCodigo() {
+  document.getElementById("codigo").value = codigoInicial;
+  document.getElementById("saida").textContent = "Código restaurado.";
+}
+
+// DESAFIOS
+const perguntas = [
+  {
+    pergunta:"O que é uma variável?",
+    opcoes:[
+      "Um lugar para guardar um valor",
+      "Uma cor da tela",
+      "Um tipo de teclado"
+    ],
+    certa:0,
+    explicacao:"Variáveis guardam valores que o programa pode utilizar."
+  },
+  {
+    pergunta:"Qual linguagem estrutura páginas web?",
+    opcoes:["HTML","SQL","Python"],
+    certa:0,
+    explicacao:"HTML organiza a estrutura e o conteúdo das páginas."
+  },
+  {
+    pergunta:"Para que serve if/else?",
+    opcoes:[
+      "Escolher caminhos conforme uma condição",
+      "Desligar o computador",
+      "Criar uma imagem"
+    ],
+    certa:0,
+    explicacao:"if/else permite escolher entre caminhos no programa."
+  },
+  {
+    pergunta:"Qual comando mostra dados no console JavaScript?",
+    opcoes:["console.log()","show.page()","print.screen()"],
+    certa:0,
+    explicacao:"console.log() mostra informações no console."
+  }
+];
+
+let indicePergunta = 0;
+let escolha = -1;
+let respondida = false;
+let acertos = Number(localStorage.getItem("devAcertos") || 0);
+
+function mostrarPergunta() {
+  const p = perguntas[indicePergunta];
+
+  document.getElementById("pergunta").textContent = p.pergunta;
+  document.getElementById("numeroPergunta").textContent =
+    "DESAFIO " + (indicePergunta + 1) + " DE " + perguntas.length;
+
+  const area = document.getElementById("alternativas");
+  area.innerHTML = "";
+  escolha = -1;
+  respondida = false;
+
+  p.opcoes.forEach((opcao, i) => {
+    const botao = document.createElement("button");
+    botao.className = "opcao";
+    botao.textContent = String.fromCharCode(65 + i) + ") " + opcao;
+
+    botao.onclick = () => {
+      if (respondida) return;
+      escolha = i;
+      document.querySelectorAll(".opcao").forEach(b => {
+        b.classList.remove("selecionada");
+      });
+      botao.classList.add("selecionada");
+    };
+
+    area.appendChild(botao);
+  });
+
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("conferir").disabled = false;
+  document.getElementById("proximo").disabled = true;
+}
+
+function conferirResposta() {
+  if (respondida) return;
+
+  if (escolha === -1) {
+    alert("Escolha uma alternativa primeiro!");
+    return;
+  }
+
+  respondida = true;
+  const p = perguntas[indicePergunta];
+  const feedback = document.getElementById("feedback");
+
+  if (escolha === p.certa) {
+    feedback.textContent = "✓ Correto! " + p.explicacao;
+    feedback.style.color = "#65edaa";
+    acertos++;
+    localStorage.setItem("devAcertos", acertos);
+  } else {
+    feedback.textContent = "Ainda não! " + p.explicacao;
+    feedback.style.color = "#ff8198";
+  }
+
+  document.getElementById("conferir").disabled = true;
+  document.getElementById("proximo").disabled = false;
+  document.getElementById("totalDesafios").textContent = acertos;
+}
+
+function proximaPergunta() {
+  indicePergunta = (indicePergunta + 1) % perguntas.length;
+  mostrarPergunta();
+}
+
+mostrarPergunta();
+
+// ANOTAÇÕES
+let notas = JSON.parse(localStorage.getItem("devNotas") || "[]");
+
+function salvarNota() {
+  const titulo = document.getElementById("nomeNota").value.trim();
+  const texto = document.getElementById("textoNota").value.trim();
+
+  if (!titulo || !texto) {
+    alert("Preencha o título e o conteúdo!");
+    return;
+  }
+
+  notas.unshift({titulo, texto});
+  localStorage.setItem("devNotas", JSON.stringify(notas));
+
+  document.getElementById("nomeNota").value = "";
+  document.getElementById("textoNota").value = "";
+
+  mostrarNotas();
+  alert("Anotação salva com sucesso!");
+}
+
+function mostrarNotas() {
+  const lista = document.getElementById("listaNotas");
+  lista.innerHTML = "";
+
+  notas.forEach((nota, indice) => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const titulo = document.createElement("h3");
+    titulo.textContent = nota.titulo;
+
+    const texto = document.createElement("p");
+    texto.textContent = nota.texto;
+
+    const botao = document.createElement("button");
+    botao.textContent = "Excluir";
+    botao.onclick = () => {
+      notas.splice(indice, 1);
+      localStorage.setItem("devNotas", JSON.stringify(notas));
+      mostrarNotas();
+    };
+
+    card.append(titulo, texto, botao);
+    lista.appendChild(card);
+  });
+
+  document.getElementById("totalNotas").textContent = notas.length;
+
+  if (notas.length === 0) {
+    lista.textContent = "Você ainda não tem anotações salvas.";
+  }
+}
+
+function limparCampos() {
+  document.getElementById("nomeNota").value = "";
+  document.getElementById("textoNota").value = "";
+}
+
+mostrarNotas();
+
+// PROGRESSO DAS TAREFAS
+function atualizarTarefas() {
+  const tarefas = [...document.querySelectorAll(".tarefa")];
+  const concluidas = tarefas.filter(t => t.checked).length;
+
+  document.getElementById("barraProgresso").style.width =
+    (concluidas / tarefas.length * 100) + "%";
+
+  document.getElementById("textoProgresso").textContent =
+    concluidas + " de " + tarefas.length + " tarefas concluídas.";
+}
+</script>
+</body>
+</html>
